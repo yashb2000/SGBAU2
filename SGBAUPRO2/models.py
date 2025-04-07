@@ -2,7 +2,7 @@ import pymysql
 from datetime import datetime    
 
 def connect():
-    con = pymysql.connect(host='bk67xcsr2ybpdpujukjo-mysql.services.clever-cloud.com',user='uvqzjpyrqoel7l1a',password='GJDntXBJ0IXA151K7vvW',database='bk67xcsr2ybpdpujukjo')
+    con = pymysql.connect(host='brb9cup3s2docpk1dqi1-mysql.services.clever-cloud.com',user='uvqzjpyrqoel7l1a',password='C0v2QP0DkmOikXaH8blu',database='brb9cup3s2docpk1dqi1')
     return con
  
 
