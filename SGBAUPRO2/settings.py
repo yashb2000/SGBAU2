@@ -1,16 +1,17 @@
 from pathlib import Path
 import os
+import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zd2uewqd9o$a^vsk*os+=x4yh9r-o^d2qg*@nd)!vw+wlzrr6v'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-zd2uewqd9o$a^vsk*os+=x4yh9r-o^d2qg*@nd)!vw+wlzrr6v')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']  # 👈 Replace with your PythonAnywhere username
+# Allow all hosts in dev, but specify production host in env variable
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -20,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Add your apps here
 ]
 
 MIDDLEWARE = [
@@ -37,7 +39,7 @@ ROOT_URLCONF = 'SGBAUPRO2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, "templates"],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -52,18 +54,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SGBAUPRO2.wsgi.application'
 
-# ✅ Your Clever Cloud MySQL Database
+# ✅ Database - Use dj_database_url for flexibility
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'brb9cup3s2docpk1dqi1',
-        'USER': 'uvqzjpyrqoel7l1a',
-        'PASSWORD': 'C0v2QP0DkmOikXaH8blu',
-        'HOST': 'brb9cup3s2docpk1dqi1-mysql.services.clever-cloud.com',
-        'PORT': '3306',
-    }
+    'default': dj_database_url.config(
+        default='mysql://uvqzjpyrqoel7l1a:C0v2QP0DkmOikXaH8blu@brb9cup3s2docpk1dqi1-mysql.services.clever-cloud.com:3306/brb9cup3s2docpk1dqi1',
+        conn_max_age=600
+    )
 }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -83,19 +80,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-
-
+# ✅ Static files (for Clever Cloud)
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-
-CSRF_TRUSTED_ORIGINS = ['https://yourusername.pythonanywhere.com']  # 👈 Replace with your PythonAnywhere username
+# ✅ Trusted origins for CSRF
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://yourusername.pythonanywhere.com').split(',')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
